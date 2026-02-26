@@ -145,6 +145,11 @@ def run_with_existing_segments(surah_id: int, audio_path: str | None = None):
     print(f"🧪 TESTING ALIGNMENT ONLY - SURAH {surah_id}")
     print("=" * 60)
 
+    # Construct default audio path if not provided
+    if audio_path is None:
+        audio_path = f"../../Quran/badr_alturki_audio/{surah_id:03d}.wav"
+        print(f"   Using default audio path: {audio_path}")
+
     # Load existing segments from cache directory
     segments_file = Path(f"../../cache/surah_{surah_id:03d}_segments.json")
     silences_file = Path(f"../../cache/surah_{surah_id:03d}_silences.json")
@@ -298,7 +303,8 @@ if __name__ == "__main__":
             "  python example_alignment.py <audio_path> <surah_id>  # Full test with transcription"
         )
         print(
-            "  python example_alignment.py --existing <surah_id>    # Test with existing segments"
+            "  python example_alignment.py --existing <surah_id> [audio_path]"
+            "  # Test with existing segments"
         )
         print("  python example_alignment.py --core                   # Test core functions only")
         print()
@@ -325,10 +331,11 @@ if __name__ == "__main__":
         run_core_functions()
     elif sys.argv[1] == "--existing":
         if len(sys.argv) < 3:
-            print("Usage: python example_alignment.py --existing <surah_id>")
+            print("Usage: python example_alignment.py --existing <surah_id> [audio_path]")
             sys.exit(1)
         surah_id = int(sys.argv[2])
-        run_with_existing_segments(surah_id)
+        audio_path = sys.argv[3] if len(sys.argv) > 3 else None
+        run_with_existing_segments(surah_id, audio_path)
     else:
         if len(sys.argv) < 3:
             print("Usage: python example_alignment.py <audio_path> <surah_id>")
