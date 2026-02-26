@@ -140,25 +140,15 @@ def main():
             print(f"    Expected: {r.ayah.text[:50]}...")
             print(f"    Got: {r.transcribed_text[:50]}...")
 
-    # Step 8: Export to JSON
+    # Step 8: Export to JSON using canonical formatter
     print("\nStep 8: Exporting results...")
-    import json
+    from munajjam.formatter import format_to_json
 
-    output = []
-    for r in results:
-        output.append({
-            "ayah_number": r.ayah.ayah_number,
-            "start_time": round(r.start_time, 3),
-            "end_time": round(r.end_time, 3),
-            "duration": round(r.duration, 3),
-            "similarity_score": round(r.similarity_score, 3),
-            "overlap_detected": r.overlap_detected,
-            "transcribed_text": r.transcribed_text,
-        })
+    json_output = format_to_json(results, audio_file=audio_path)
 
     output_path = f"surah_{surah_number:03d}_alignment.json"
     with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
+        f.write(json_output)
 
     print(f"  Results saved to: {output_path}")
 

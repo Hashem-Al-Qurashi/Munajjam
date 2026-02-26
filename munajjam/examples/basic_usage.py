@@ -7,13 +7,13 @@ This example demonstrates the core workflow:
 3. Output results as JSON
 """
 
-import json
 from pathlib import Path
 
 # Import core components
 from munajjam.transcription import WhisperTranscriber
 from munajjam.core import align
 from munajjam.data import load_surah_ayahs
+from munajjam.formatter import format_to_json
 
 
 def process_surah(audio_path: str, surah_id: int, reciter: str = "Unknown"):
@@ -66,32 +66,21 @@ def process_surah(audio_path: str, surah_id: int, reciter: str = "Unknown"):
     if len(results) > 5:
         print(f"   ... and {len(results) - 5} more")
     
-    # Step 4: Create output
+    # Step 4: Create output using canonical formatter
     print("\n📄 Step 4: Creating JSON output...")
-    
-    output = []
-    for result in results:
-        output.append({
-            "id": result.ayah.ayah_number,
-            "sura_id": result.ayah.surah_id,
-            "ayah_index": result.ayah.ayah_number - 1,
-            "start": round(result.start_time, 2),
-            "end": round(result.end_time, 2),
-            "transcribed_text": result.transcribed_text,
-            "corrected_text": result.ayah.text,
-            "similarity_score": round(result.similarity_score, 3),
-        })
-    
-    return output
+
+    json_output = format_to_json(results, audio_file=audio_path, reciter=reciter)
+
+    return json_output
 
 
-def save_to_json(output: list, output_path: str):
-    """Save output to JSON file."""
+def save_to_json(json_output: str, output_path: str):
+    """Save JSON output string to file."""
     print(f"\n💾 Saving to: {output_path}")
-    
+
     with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
-    
+        f.write(json_output)
+
     print("   ✅ Saved successfully!")
 
 
