@@ -7,6 +7,7 @@ This module defines the interface that all transcriber implementations must foll
 from abc import ABC, abstractmethod
 from collections.abc import AsyncIterator, Iterator
 from pathlib import Path
+from types import TracebackType
 
 from munajjam.models import Segment
 
@@ -118,6 +119,11 @@ class BaseTranscriber(ABC):
         self.load()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Context manager exit - unloads the model."""
         self.unload()
