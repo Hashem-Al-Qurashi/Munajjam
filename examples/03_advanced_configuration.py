@@ -5,7 +5,7 @@ This example demonstrates advanced usage:
 - Custom configuration settings
 - Silence detection and usage
 - Progress tracking
-- CTC refinement and energy snap
+- Energy snap for precise boundary placement
 - Detailed result inspection
 """
 
@@ -83,10 +83,9 @@ def main():
         audio_path=audio_path,  # Audio file (required)
         strategy="auto",
         quality_threshold=0.85,  # Threshold for high-quality alignment
-        fix_drift=True,  # Enable zone realignment
-        fix_overlaps=True,  # Fix overlapping ayahs
-        ctc_refine=True,  # Refine boundaries with CTC forced alignment (default)
-        energy_snap=True,  # Snap boundaries to energy minima (default)
+        fix_drift=True,          # Enable zone realignment
+        fix_overlaps=True,       # Fix overlapping ayahs
+        energy_snap=True,        # Snap boundaries to energy minima (default)
     )
 
     results = aligner.align(
